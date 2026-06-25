@@ -1,0 +1,262 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "description": "Spring inventory built from SSC Combined IPPT Table (field chart photos)",
+    "chart_format": "wire_size x coils (e.g. 218x23 = 0.218 wire, 23 coils)",
+    "ippt_scale": "Whole numbers (e.g. 25.8, 37.56) — NOT decimal fractions",
+    "combined_ippt_note": "The chart shows COMBINED IPPT of two springs used together. Single spring IPPT = combined / 2.",
+    "tolerance_rule": "Match window is +/- 3.0 IPPT absolute on the TARGET combined IPPT",
+    "excluded": "Max Life 1.75 inch springs excluded per technician preference",
+    "wire_ippt_reference": {
+      "0.207": 18.78,
+      "0.218": 25.8,
+      "0.225": 32.24,
+      "0.234": 37.83,
+      "0.243": 41.51,
+      "0.250": 46.7,
+      "0.262": null,
+      "0.273": null,
+      "0.283": null,
+      "0.289": null,
+      "0.295": null
+    }
+  },
+
+  "spring_categories": {
+
+    "low_cycle_2in": {
+      "label": "Low Cycle 2\"",
+      "description": "Standard residential torsion springs, 2 inch inside diameter",
+      "springs": [
+        {
+          "code": "207x22",
+          "wire_size": 0.207,
+          "coils": 22,
+          "inside_diameter": 2.0,
+          "category": "low_cycle_2in",
+          "single_ippt": 24.16,
+          "max_turns": null
+        },
+        {
+          "code": "218x23",
+          "wire_size": 0.218,
+          "coils": 23,
+          "inside_diameter": 2.0,
+          "category": "low_cycle_2in",
+          "single_ippt": 30.28,
+          "max_turns": null
+        },
+        {
+          "code": "225x24",
+          "wire_size": 0.225,
+          "coils": 24,
+          "inside_diameter": 2.0,
+          "category": "low_cycle_2in",
+          "single_ippt": 33.54,
+          "max_turns": null
+        }
+      ],
+      "combined_ippt_table": {
+        "description": "Combined IPPT when pairing two springs from this category",
+        "pairs": [
+          { "spring1": "207x22", "spring2": "207x22", "combined_ippt": 48.32 },
+          { "spring1": "207x22", "spring2": "218x23", "combined_ippt": 54.44 },
+          { "spring1": "207x22", "spring2": "225x24", "combined_ippt": 57.7 },
+          { "spring1": "218x23", "spring2": "218x23", "combined_ippt": 60.56 },
+          { "spring1": "218x23", "spring2": "225x24", "combined_ippt": 63.82 },
+          { "spring1": "225x24", "spring2": "225x24", "combined_ippt": 67.08 }
+        ]
+      }
+    },
+
+    "high_cycle_2in": {
+      "label": "High Cycle 2\"",
+      "description": "High cycle life torsion springs, 2 inch inside diameter",
+      "springs": [
+        {
+          "code": "207x28",
+          "wire_size": 0.207,
+          "coils": 28,
+          "inside_diameter": 2.0,
+          "category": "high_cycle_2in",
+          "single_ippt": 18.73,
+          "max_turns": null
+        },
+        {
+          "code": "218x27",
+          "wire_size": 0.218,
+          "coils": 27,
+          "inside_diameter": 2.0,
+          "category": "high_cycle_2in",
+          "single_ippt": 25.8,
+          "max_turns": null
+        },
+        {
+          "code": "234x30",
+          "wire_size": 0.234,
+          "coils": 30,
+          "inside_diameter": 2.0,
+          "category": "high_cycle_2in",
+          "single_ippt": 32.24,
+          "max_turns": null
+        },
+        {
+          "code": "243x31",
+          "wire_size": 0.243,
+          "coils": 31,
+          "inside_diameter": 2.0,
+          "category": "high_cycle_2in",
+          "single_ippt": 37.83,
+          "max_turns": null
+        },
+        {
+          "code": "250x32",
+          "wire_size": 0.250,
+          "coils": 32,
+          "inside_diameter": 2.0,
+          "category": "high_cycle_2in",
+          "single_ippt": 41.51,
+          "max_turns": null
+        },
+        {
+          "code": "262x36",
+          "wire_size": 0.262,
+          "coils": 36,
+          "inside_diameter": 2.0,
+          "category": "high_cycle_2in",
+          "single_ippt": 46.71,
+          "max_turns": null
+        }
+      ],
+      "combined_ippt_table": {
+        "description": "Combined IPPT when pairing two springs from this category",
+        "pairs": [
+          { "spring1": "207x28", "spring2": "207x28", "combined_ippt": 37.56 },
+          { "spring1": "207x28", "spring2": "218x27", "combined_ippt": 44.38 },
+          { "spring1": "207x28", "spring2": "234x30", "combined_ippt": 51.02 },
+          { "spring1": "207x28", "spring2": "243x31", "combined_ippt": 56.61 },
+          { "spring1": "207x28", "spring2": "250x32", "combined_ippt": 60.28 },
+          { "spring1": "207x28", "spring2": "262x36", "combined_ippt": 65.49 },
+          { "spring1": "218x27", "spring2": "218x27", "combined_ippt": 51.2 },
+          { "spring1": "218x27", "spring2": "234x30", "combined_ippt": 57.84 },
+          { "spring1": "218x27", "spring2": "243x31", "combined_ippt": 63.43 },
+          { "spring1": "218x27", "spring2": "250x32", "combined_ippt": 67.11 },
+          { "spring1": "218x27", "spring2": "262x36", "combined_ippt": 72.31 },
+          { "spring1": "234x30", "spring2": "234x30", "combined_ippt": 64.48 },
+          { "spring1": "234x30", "spring2": "243x31", "combined_ippt": 70.07 },
+          { "spring1": "234x30", "spring2": "250x32", "combined_ippt": 73.75 },
+          { "spring1": "234x30", "spring2": "262x36", "combined_ippt": 78.95 },
+          { "spring1": "243x31", "spring2": "243x31", "combined_ippt": 75.66 },
+          { "spring1": "243x31", "spring2": "250x32", "combined_ippt": 79.34 },
+          { "spring1": "243x31", "spring2": "262x36", "combined_ippt": 84.54 },
+          { "spring1": "250x32", "spring2": "250x32", "combined_ippt": 83.02 },
+          { "spring1": "250x32", "spring2": "262x36", "combined_ippt": 88.22 },
+          { "spring1": "262x36", "spring2": "262x36", "combined_ippt": 93.42 }
+        ]
+      }
+    },
+
+    "max_life_2in": {
+      "label": "Max Life 2\"",
+      "description": "Maximum cycle life torsion springs, 2 inch inside diameter",
+      "springs": [
+        {
+          "code": "218x36.5",
+          "wire_size": 0.218,
+          "coils": 36.5,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 18.73,
+          "max_turns": null
+        },
+        {
+          "code": "234x39",
+          "wire_size": 0.234,
+          "coils": 39,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 24.57,
+          "max_turns": null
+        },
+        {
+          "code": "250x44",
+          "wire_size": 0.250,
+          "coils": 44,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 29.86,
+          "max_turns": null
+        },
+        {
+          "code": "262x51",
+          "wire_size": 0.262,
+          "coils": 51,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 32.81,
+          "max_turns": null
+        },
+        {
+          "code": "273x57.5",
+          "wire_size": 0.273,
+          "coils": 57.5,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 34.95,
+          "max_turns": null
+        },
+        {
+          "code": "289x62.5",
+          "wire_size": 0.289,
+          "coils": 62.5,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 42.43,
+          "max_turns": null
+        },
+        {
+          "code": "295x59",
+          "wire_size": 0.295,
+          "coils": 59,
+          "inside_diameter": 2.0,
+          "category": "max_life_2in",
+          "single_ippt": 49.77,
+          "max_turns": null
+        }
+      ],
+      "combined_ippt_table": {
+        "description": "Combined IPPT when pairing two springs from this category",
+        "pairs": [
+          { "spring1": "218x36.5", "spring2": "218x36.5", "combined_ippt": 37.46 },
+          { "spring1": "218x36.5", "spring2": "234x39",   "combined_ippt": 43.3 },
+          { "spring1": "218x36.5", "spring2": "250x44",   "combined_ippt": 48.59 },
+          { "spring1": "218x36.5", "spring2": "262x51",   "combined_ippt": 51.34 },
+          { "spring1": "218x36.5", "spring2": "273x57.5", "combined_ippt": 53.68 },
+          { "spring1": "218x36.5", "spring2": "289x62.5", "combined_ippt": 61.16 },
+          { "spring1": "218x36.5", "spring2": "295x59",   "combined_ippt": 68.5 },
+          { "spring1": "234x39",   "spring2": "234x39",   "combined_ippt": 49.14 },
+          { "spring1": "234x39",   "spring2": "250x44",   "combined_ippt": 54.43 },
+          { "spring1": "234x39",   "spring2": "262x51",   "combined_ippt": 57.18 },
+          { "spring1": "234x39",   "spring2": "273x57.5", "combined_ippt": 59.52 },
+          { "spring1": "234x39",   "spring2": "289x62.5", "combined_ippt": 67.0 },
+          { "spring1": "234x39",   "spring2": "295x59",   "combined_ippt": 74.63 },
+          { "spring1": "250x44",   "spring2": "250x44",   "combined_ippt": 59.72 },
+          { "spring1": "250x44",   "spring2": "262x51",   "combined_ippt": 62.47 },
+          { "spring1": "250x44",   "spring2": "273x57.5", "combined_ippt": 64.81 },
+          { "spring1": "250x44",   "spring2": "289x62.5", "combined_ippt": 72.29 },
+          { "spring1": "250x44",   "spring2": "295x59",   "combined_ippt": 79.83 },
+          { "spring1": "262x51",   "spring2": "262x51",   "combined_ippt": 65.22 },
+          { "spring1": "262x51",   "spring2": "273x57.5", "combined_ippt": 67.56 },
+          { "spring1": "262x51",   "spring2": "289x62.5", "combined_ippt": 75.04 },
+          { "spring1": "262x51",   "spring2": "295x59",   "combined_ippt": 82.38 },
+          { "spring1": "273x57.5", "spring2": "273x57.5", "combined_ippt": 69.9 },
+          { "spring1": "273x57.5", "spring2": "289x62.5", "combined_ippt": 77.38 },
+          { "spring1": "273x57.5", "spring2": "295x59",   "combined_ippt": 84.72 },
+          { "spring1": "289x62.5", "spring2": "289x62.5", "combined_ippt": 84.86 },
+          { "spring1": "289x62.5", "spring2": "295x59",   "combined_ippt": 82.2 },
+          { "spring1": "295x59",   "spring2": "295x59",   "combined_ippt": 89.54 }
+        ]
+      }
+    }
+  }
+}
