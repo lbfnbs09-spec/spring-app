@@ -45,6 +45,14 @@ st.markdown("""
 
     /* Hide Streamlit chrome */
     #MainMenu, footer, header { visibility: hidden; }
+
+    /* Remove card borders Streamlit adds to markdown blocks */
+    div[data-testid="stMarkdown"] {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
     .block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 680px; }
 
     /* ── App Header ── */
@@ -423,8 +431,6 @@ st.markdown("""
 # ---------------------------------------------------------------------------
 # Inputs
 # ---------------------------------------------------------------------------
-st.markdown('<div class="input-card">', unsafe_allow_html=True)
-
 col1, col2 = st.columns(2)
 with col1:
     door_weight = st.number_input("Weight (lbs)", min_value=50, max_value=700, value=185, step=5)
@@ -452,8 +458,6 @@ if manual_turns_enabled:
     manual_turns = st.number_input("Drum Turns (CDT)", min_value=1.0, max_value=20.0, value=3.4, step=0.05)
 else:
     manual_turns = None
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 calc_btn = st.button("⚡  Calculate Spring Requirements")
 
