@@ -121,16 +121,23 @@ st.markdown("""
         border: 1px solid #e5e7eb !important;
         border-radius: 8px !important;
         padding: 0.55rem 1.4rem !important;
-        color: #374151 !important;
+        color: #111827 !important;
         font-size: 0.95rem !important;
         font-weight: 700 !important;
         text-transform: none !important;
         letter-spacing: 0 !important;
         cursor: pointer;
     }
-    div[data-testid="stCheckbox"] label {
-        color: #6b7280 !important;
-        font-size: 0.78rem !important;
+    div[data-testid="stRadio"] > div > label p,
+    div[data-testid="stRadio"] > div > label span {
+        color: #111827 !important;
+        font-weight: 700 !important;
+    }
+    div[data-testid="stCheckbox"] label,
+    div[data-testid="stCheckbox"] label p {
+        color: #374151 !important;
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
         text-transform: none !important;
         letter-spacing: 0 !important;
     }
@@ -405,7 +412,7 @@ st.markdown("""
 # ---------------------------------------------------------------------------
 # Inputs
 # ---------------------------------------------------------------------------
-st.markdown('<div class="input-card"><div class="section-label">Door Specifications</div>', unsafe_allow_html=True)
+st.markdown('<div class="input-card">', unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 with col1:
