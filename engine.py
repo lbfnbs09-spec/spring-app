@@ -107,9 +107,9 @@ TIER_CATEGORIES = {
 }
 
 TIER_LABELS = {
-    "economy":  "💰 Economy  (Low Cycle ~10k)",
-    "mid":      "⚙️ Mid-Grade  (High Cycle ~20k)",
-    "max_life": "🏆 Max Life  (Max Cycle ~100k)",
+    "economy":  "Economy",
+    "mid":      "Mid-Grade",
+    "max_life": "Max Life",
 }
 
 
