@@ -67,6 +67,16 @@ st.markdown("""
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
+    .app-verse {
+        font-size: 0.72rem;
+        color: #9ca3af;
+        margin-top: 0.5rem;
+        font-style: italic;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.5;
+    }
 
     /* ── Input Card ── */
     .input-card {
@@ -406,6 +416,7 @@ st.markdown("""
 <div class="app-header">
     <div class="app-logo">💵</div>
     <div class="app-title">Spring Calculator</div>
+    <div class="app-verse">&ldquo;A false balance is an abomination to the Lord, but a just weight is his delight.&rdquo; &mdash; Proverbs 11:1</div>
 </div>
 """, unsafe_allow_html=True)
 
