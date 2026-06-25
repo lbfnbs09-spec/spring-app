@@ -21,7 +21,7 @@ from engine import calculate_target_ippt, DRUM_PROFILES, DEFAULT_TOLERANCE
 # ---------------------------------------------------------------------------
 st.set_page_config(
     page_title="Spring Calc",
-    page_icon="🌀",
+    page_icon="💵",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -397,7 +397,7 @@ st.markdown("""
 # ---------------------------------------------------------------------------
 st.markdown("""
 <div class="app-header">
-    <div class="app-logo">🌀</div>
+    <div class="app-logo">💵</div>
     <div class="app-title">Spring Calculator</div>
 </div>
 """, unsafe_allow_html=True)
@@ -477,10 +477,6 @@ if calc_btn:
             <div class="metric-pill">
                 <div class="metric-pill-val">{result.track_radius}"</div>
                 <div class="metric-pill-lbl">Radius</div>
-            </div>
-            <div class="metric-pill">
-                <div class="metric-pill-val">{result.cable_drum_turns}</div>
-                <div class="metric-pill-lbl">CDT</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -581,7 +577,7 @@ if calc_btn:
 else:
     st.markdown("""
     <div class="empty-state">
-        <div class="empty-icon">🌀</div>
+        <div class="empty-icon">💵</div>
         <div class="empty-text">Enter door specs above and tap Calculate</div>
     </div>
     """, unsafe_allow_html=True)
