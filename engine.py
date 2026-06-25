@@ -249,19 +249,60 @@ def load_pricebook() -> dict:
         return json.load(f)
 
 
+# Maximum allowed ratio between the larger and smaller single IPPT in a pair.
+# Pairs where one spring is more than this multiple stronger than the other
+# are excluded as mechanically unbalanced (e.g. 218 + 273 max-life).
+MAX_IPPT_RATIO = 1.5
+
+
+def _build_single_ippt_map(categories: dict) -> dict:
+    """Return {spring_code: single_ippt} from all categories."""
+    ippt_map = {}
+    for cat_data in categories.values():
+        for spring in cat_data.get("springs", []):
+            code = spring.get("code")
+            ippt = spring.get("single_ippt")
+            if code and ippt is not None:
+                ippt_map[code] = ippt
+    return ippt_map
+
+
+def _pair_is_balanced(s1_code: str, s2_code: str, ippt_map: dict) -> bool:
+    """
+    Return True if the two springs are close enough in size to be paired.
+    Matched pairs (same spring) are always balanced.
+    Mixed pairs are rejected if the stronger spring is >MAX_IPPT_RATIO × the weaker.
+    """
+    if s1_code == s2_code:
+        return True
+    i1 = ippt_map.get(s1_code)
+    i2 = ippt_map.get(s2_code)
+    if i1 is None or i2 is None:
+        return True  # can't check — allow it
+    ratio = max(i1, i2) / min(i1, i2)
+    return ratio <= MAX_IPPT_RATIO
+
+
 def find_pair_matches(target: float, lower_bound: float, upper_bound: float):
     """
     Scan all spring pairs in the combined IPPT table.
 
+    Pairs are excluded if:
+      - combined_ippt is outside [lower_bound, upper_bound], OR
+      - the two springs are too mismatched in size (ratio > MAX_IPPT_RATIO)
+
     Returns:
         (flat_matches, tier_results)
-        flat_matches  — all in-range pairs sorted by abs_delta
+        flat_matches  — all valid in-range pairs sorted by abs_delta
         tier_results  — list[TierResult], one per tier (economy/mid/max_life)
                         each holds the single best match for that tier, or
                         in_range=False if no pair qualifies.
     """
     pricebook = load_pricebook()
     categories = pricebook.get("spring_categories", {})
+
+    # Build single-IPPT lookup for balance checking
+    ippt_map = _build_single_ippt_map(categories)
 
     # Build a dict: cat_key -> list of candidate dicts
     cat_candidates: dict[str, list] = {}
@@ -272,18 +313,23 @@ def find_pair_matches(target: float, lower_bound: float, upper_bound: float):
         cat_candidates[cat_key] = []
 
         for pair in pairs:
+            s1 = pair["spring1"]
+            s2 = pair["spring2"]
             combined = pair.get("combined_ippt", 0)
             delta = round(combined - target, 2)
             abs_delta = abs(delta)
+            in_range = (lower_bound <= combined <= upper_bound)
+            balanced = _pair_is_balanced(s1, s2, ippt_map)
+
             cat_candidates[cat_key].append({
                 "category": cat_key,
                 "category_label": label,
-                "spring1_code": pair["spring1"],
-                "spring2_code": pair["spring2"],
+                "spring1_code": s1,
+                "spring2_code": s2,
                 "combined_ippt": combined,
                 "delta": delta,
                 "abs_delta": abs_delta,
-                "in_range": lower_bound <= combined <= upper_bound,
+                "in_range": in_range and balanced,  # must be both
             })
 
         # Sort each category by abs_delta

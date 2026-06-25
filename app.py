@@ -33,7 +33,7 @@ DRUM_OPTIONS = {
 }
 
 # ---------------------------------------------------------------------------
-# CSS — Sleek minimal dark theme
+# CSS — Bright, clean light theme
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
@@ -41,47 +41,48 @@ st.markdown("""
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    .stApp { background-color: #0a0a0f; color: #e8e8f0; }
+    .stApp { background-color: #f4f6f9; color: #1a1a2e; }
 
     /* Hide Streamlit chrome */
     #MainMenu, footer, header { visibility: hidden; }
-    .block-container { padding-top: 2rem; padding-bottom: 2rem; max-width: 680px; }
+    .block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 680px; }
 
     /* ── App Header ── */
     .app-header {
         text-align: center;
-        padding: 2rem 0 1.5rem 0;
+        padding: 1.5rem 0 1.25rem 0;
     }
-    .app-logo { font-size: 2.2rem; margin-bottom: 0.4rem; }
+    .app-logo { font-size: 2rem; margin-bottom: 0.3rem; }
     .app-title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 800;
         letter-spacing: -0.02em;
-        color: #ffffff;
+        color: #1a1a2e;
         margin: 0;
     }
     .app-sub {
         font-size: 0.72rem;
-        color: #444460;
-        margin-top: 0.3rem;
+        color: #9ca3af;
+        margin-top: 0.25rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
 
     /* ── Input Card ── */
     .input-card {
-        background: #12121a;
-        border: 1px solid #1e1e2e;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 16px;
         padding: 1.5rem 1.75rem 1.25rem 1.75rem;
         margin-bottom: 1rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
     .section-label {
         font-size: 0.65rem;
         font-weight: 700;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: #333350;
+        color: #9ca3af;
         margin-bottom: 1rem;
     }
 
@@ -89,47 +90,47 @@ st.markdown("""
     div[data-testid="stNumberInput"] label,
     div[data-testid="stRadio"] label,
     div[data-testid="stSelectbox"] label {
-        color: #555570 !important;
+        color: #6b7280 !important;
         font-size: 0.68rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
     }
     div[data-testid="stNumberInput"] input {
-        background: #0d0d14 !important;
-        border: 1px solid #1e1e2e !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
         border-radius: 8px !important;
-        color: #ffffff !important;
+        color: #111827 !important;
         font-size: 1.15rem !important;
         font-weight: 700 !important;
     }
     div[data-testid="stSelectbox"] > div > div {
-        background: #0d0d14 !important;
-        border: 1px solid #1e1e2e !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
         border-radius: 8px !important;
-        color: #e8e8f0 !important;
-        font-size: 0.85rem !important;
+        color: #111827 !important;
+        font-size: 0.88rem !important;
+        font-weight: 600 !important;
     }
-    /* Radio buttons — clean pill style */
     div[data-testid="stRadio"] > div {
         flex-direction: row !important;
         gap: 0.5rem !important;
     }
     div[data-testid="stRadio"] > div > label {
-        background: #0d0d14 !important;
-        border: 1px solid #1e1e2e !important;
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
         border-radius: 8px !important;
-        padding: 0.55rem 1.25rem !important;
-        color: #888899 !important;
-        font-size: 0.9rem !important;
+        padding: 0.55rem 1.4rem !important;
+        color: #374151 !important;
+        font-size: 0.95rem !important;
         font-weight: 700 !important;
         text-transform: none !important;
         letter-spacing: 0 !important;
         cursor: pointer;
     }
     div[data-testid="stCheckbox"] label {
-        color: #444460 !important;
-        font-size: 0.75rem !important;
+        color: #6b7280 !important;
+        font-size: 0.78rem !important;
         text-transform: none !important;
         letter-spacing: 0 !important;
     }
@@ -137,7 +138,7 @@ st.markdown("""
     /* ── Calculate Button ── */
     .stButton > button {
         width: 100%;
-        background: linear-gradient(135deg, #e63946, #c1121f);
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
         color: white;
         font-weight: 700;
         font-size: 0.88rem;
@@ -147,17 +148,19 @@ st.markdown("""
         border-radius: 10px;
         padding: 0.9rem;
         margin-top: 0.25rem;
+        box-shadow: 0 2px 8px rgba(220,38,38,0.3);
     }
-    .stButton > button:hover { opacity: 0.85; }
+    .stButton > button:hover { opacity: 0.9; }
 
     /* ── IPPT Banner ── */
     .ippt-banner {
-        background: #12121a;
-        border: 1px solid #1e1e2e;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 16px;
         padding: 1.75rem;
         text-align: center;
         margin: 1.25rem 0;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         position: relative;
         overflow: hidden;
     }
@@ -165,38 +168,36 @@ st.markdown("""
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #e63946, transparent);
+        height: 3px;
+        background: linear-gradient(90deg, #dc2626, #ef4444, #dc2626);
     }
     .ippt-value {
         font-size: 4.5rem;
         font-weight: 900;
-        color: #ffffff;
+        color: #111827;
         line-height: 1;
         letter-spacing: -0.04em;
     }
     .ippt-unit {
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: #e63946;
-        margin-left: 0.25rem;
-        vertical-align: super;
         font-size: 1rem;
+        font-weight: 600;
+        color: #dc2626;
+        margin-left: 0.2rem;
     }
     .ippt-label {
         font-size: 0.62rem;
         font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #333350;
+        color: #9ca3af;
         margin-top: 0.5rem;
     }
     .ippt-window {
-        font-size: 0.75rem;
-        color: #2a2a3e;
+        font-size: 0.78rem;
+        color: #9ca3af;
         margin-top: 0.5rem;
     }
-    .ippt-window b { color: #444460; }
+    .ippt-window b { color: #6b7280; }
 
     /* ── Metrics Pills ── */
     .metrics-row {
@@ -206,23 +207,24 @@ st.markdown("""
     }
     .metric-pill {
         flex: 1;
-        background: #12121a;
-        border: 1px solid #1e1e2e;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 10px;
-        padding: 0.6rem 0.5rem;
+        padding: 0.65rem 0.5rem;
         text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .metric-pill-val {
-        font-size: 0.95rem;
+        font-size: 1.0rem;
         font-weight: 700;
-        color: #e8e8f0;
+        color: #111827;
     }
     .metric-pill-lbl {
         font-size: 0.58rem;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #333350;
+        color: #9ca3af;
         margin-top: 0.15rem;
     }
 
@@ -233,28 +235,28 @@ st.markdown("""
         gap: 0.75rem;
         margin: 1.5rem 0 1rem 0;
     }
-    .sdl { flex: 1; height: 1px; background: #1a1a24; }
+    .sdl { flex: 1; height: 1px; background: #e5e7eb; }
     .sdt {
         font-size: 0.62rem;
         font-weight: 700;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: #2a2a3e;
+        color: #d1d5db;
         white-space: nowrap;
     }
 
     /* ── Tier Cards ── */
     .tier-card {
-        background: #12121a;
-        border: 1px solid #1e1e2e;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         padding: 1.1rem 1.25rem;
         margin: 0.55rem 0;
-        position: relative;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .tier-card-economy  { border-left: 3px solid #52525b; }
-    .tier-card-mid      { border-left: 3px solid #2563eb; }
-    .tier-card-maxlife  { border-left: 3px solid #d97706; }
+    .tier-card-economy  { border-left: 4px solid #9ca3af; }
+    .tier-card-mid      { border-left: 4px solid #3b82f6; }
+    .tier-card-maxlife  { border-left: 4px solid #f59e0b; }
 
     .tier-top-row {
         display: flex;
@@ -263,36 +265,36 @@ st.markdown("""
         margin-bottom: 0.55rem;
     }
     .tier-badge {
-        font-size: 0.58rem;
+        font-size: 0.6rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        padding: 0.18rem 0.5rem;
+        padding: 0.2rem 0.6rem;
         border-radius: 20px;
     }
-    .tb-economy  { background: #18181f; color: #52525b; }
-    .tb-mid      { background: #0c1629; color: #2563eb; }
-    .tb-maxlife  { background: #1a1200; color: #d97706; }
+    .tb-economy  { background: #f3f4f6; color: #6b7280; }
+    .tb-mid      { background: #eff6ff; color: #2563eb; }
+    .tb-maxlife  { background: #fffbeb; color: #d97706; }
 
     .tier-delta {
-        font-size: 0.68rem;
+        font-size: 0.7rem;
         font-weight: 600;
-        padding: 0.18rem 0.5rem;
+        padding: 0.2rem 0.6rem;
         border-radius: 20px;
-        background: #0d0d14;
-        border: 1px solid #1a1a24;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
     }
-    .td-pos  { color: #10b981; }
-    .td-neg  { color: #f87171; }
-    .td-zero { color: #10b981; }
+    .td-pos  { color: #059669; }
+    .td-neg  { color: #dc2626; }
+    .td-zero { color: #059669; }
 
     .tier-codes {
-        font-size: 1.4rem;
+        font-size: 1.45rem;
         font-weight: 800;
-        color: #ffffff;
+        color: #111827;
         letter-spacing: -0.01em;
     }
-    .tier-plus { color: #2a2a3e; font-weight: 300; margin: 0 0.3rem; }
+    .tier-plus { color: #d1d5db; font-weight: 300; margin: 0 0.3rem; }
 
     .tier-bottom-row {
         display: flex;
@@ -300,14 +302,14 @@ st.markdown("""
         margin-top: 0.4rem;
         gap: 0.5rem;
     }
-    .tier-ippt { font-size: 0.82rem; font-weight: 600; color: #10b981; }
-    .tier-sep  { color: #1e1e2e; font-size: 0.7rem; }
-    .tier-cat  { font-size: 0.62rem; color: #2a2a3e; }
+    .tier-ippt { font-size: 0.85rem; font-weight: 600; color: #059669; }
+    .tier-sep  { color: #e5e7eb; font-size: 0.7rem; }
+    .tier-cat  { font-size: 0.65rem; color: #9ca3af; }
 
     /* ── Out of Range ── */
     .oor-card {
-        background: #0d0d14;
-        border: 1px dashed #1a1a24;
+        background: #fafafa;
+        border: 1px dashed #e5e7eb;
         border-radius: 14px;
         padding: 0.9rem 1.25rem;
         margin: 0.55rem 0;
@@ -315,25 +317,25 @@ st.markdown("""
         align-items: center;
         gap: 0.85rem;
     }
-    .oor-icon { font-size: 1.2rem; opacity: 0.25; }
+    .oor-icon { font-size: 1.2rem; opacity: 0.3; }
     .oor-tier {
-        font-size: 0.58rem;
+        font-size: 0.6rem;
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #2a2a3e;
+        color: #d1d5db;
         margin-bottom: 0.15rem;
     }
-    .oor-msg { font-size: 0.82rem; font-weight: 600; color: #333350; }
+    .oor-msg { font-size: 0.85rem; font-weight: 600; color: #9ca3af; }
 
     /* ── Note Box ── */
     .note-box {
-        background: #0a0a0f;
-        border-left: 2px solid #1a1a24;
+        background: #f9fafb;
+        border-left: 2px solid #e5e7eb;
         padding: 0.45rem 0.75rem;
         border-radius: 4px;
         font-size: 0.72rem;
-        color: #333350;
+        color: #6b7280;
         margin: 0.25rem 0;
         font-family: 'Courier New', monospace;
     }
@@ -343,44 +345,45 @@ st.markdown("""
         display: flex;
         align-items: center;
         padding: 0.6rem 0;
-        border-bottom: 1px solid #14141e;
+        border-bottom: 1px solid #f3f4f6;
         gap: 0.75rem;
     }
     .match-row:last-child { border-bottom: none; }
-    .mr-rank { font-size: 0.6rem; color: #2a2a3e; font-weight: 700; min-width: 1.5rem; }
-    .mr-codes { font-size: 0.88rem; font-weight: 700; color: #e8e8f0; flex: 1; }
-    .mr-cat { font-size: 0.6rem; color: #2a2a3e; display: block; margin-top: 0.1rem; }
-    .mr-ippt { font-size: 0.8rem; font-weight: 600; color: #10b981; white-space: nowrap; }
-    .mr-delta { font-size: 0.62rem; color: #2a2a3e; }
+    .mr-rank { font-size: 0.62rem; color: #d1d5db; font-weight: 700; min-width: 1.5rem; }
+    .mr-codes { font-size: 0.9rem; font-weight: 700; color: #111827; flex: 1; }
+    .mr-cat { font-size: 0.62rem; color: #9ca3af; display: block; margin-top: 0.1rem; }
+    .mr-ippt { font-size: 0.82rem; font-weight: 600; color: #059669; white-space: nowrap; }
+    .mr-delta { font-size: 0.62rem; color: #9ca3af; }
 
     /* ── Empty State ── */
     .empty-state {
         text-align: center;
         padding: 4rem 1rem 3rem 1rem;
     }
-    .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; opacity: 0.15; }
-    .empty-text { font-size: 0.8rem; color: #222230; font-weight: 500; }
+    .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; opacity: 0.2; }
+    .empty-text { font-size: 0.85rem; color: #9ca3af; font-weight: 500; }
 
     /* ── Footer ── */
     .app-footer {
         text-align: center;
         padding: 2rem 0 0.5rem 0;
-        font-size: 0.6rem;
-        color: #1a1a24;
+        font-size: 0.62rem;
+        color: #d1d5db;
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
 
     /* Expander */
     details {
-        background: #12121a !important;
-        border: 1px solid #1e1e2e !important;
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
         border-radius: 10px !important;
         padding: 0 0.5rem !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
     }
     details summary {
         font-size: 0.7rem !important;
-        color: #333350 !important;
+        color: #9ca3af !important;
         font-weight: 700 !important;
         letter-spacing: 0.06em !important;
         text-transform: uppercase !important;
@@ -396,7 +399,6 @@ st.markdown("""
 <div class="app-header">
     <div class="app-logo">🌀</div>
     <div class="app-title">Spring Calculator</div>
-    <div class="app-sub">SSC Formula · Field Edition</div>
 </div>
 """, unsafe_allow_html=True)
 
