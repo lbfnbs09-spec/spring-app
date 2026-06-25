@@ -151,15 +151,6 @@ st.markdown("""
         color: #111827 !important;
         font-weight: 700 !important;
     }
-    div[data-testid="stCheckbox"] label,
-    div[data-testid="stCheckbox"] label p {
-        color: #374151 !important;
-        font-size: 0.82rem !important;
-        font-weight: 600 !important;
-        text-transform: none !important;
-        letter-spacing: 0 !important;
-    }
-
     /* ── Calculate Button ── */
     .stButton > button {
         width: 100%;
@@ -453,12 +444,6 @@ with col4:
         format_func=lambda k: DRUM_OPTIONS[k]
     )
 
-manual_turns_enabled = st.checkbox("Override drum turns manually", value=False)
-if manual_turns_enabled:
-    manual_turns = st.number_input("Drum Turns (CDT)", min_value=1.0, max_value=20.0, value=3.4, step=0.05)
-else:
-    manual_turns = None
-
 calc_btn = st.button("⚡  Calculate Spring Requirements")
 
 # ---------------------------------------------------------------------------
@@ -471,7 +456,6 @@ if calc_btn:
             door_height_ft=float(door_height),
             track_radius=int(track_radius),
             drum_model=drum_model,
-            cable_drum_turns_override=manual_turns
         )
 
         # ── IPPT Banner ──

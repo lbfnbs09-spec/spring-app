@@ -1,0 +1,318 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "api_version": "v2",
+    "description": "ServiceTitan API v2 payload templates for garage door spring replacement estimates",
+    "base_url": "https://api.servicetitan.io",
+    "auth_url": "https://auth.servicetitan.io/connect/token",
+    "docs_reference": "https://developer.servicetitan.io/apis/",
+    "notes": [
+      "Replace all {{PLACEHOLDER}} values with real data at runtime",
+      "tenant_id is your ServiceTitan account tenant ID",
+      "All monetary values are in USD cents (multiply dollars by 100)",
+      "jobId must reference an existing active job in ServiceTitan"
+    ]
+  },
+
+  "authentication": {
+    "description": "OAuth 2.0 Client Credentials flow - call this first to get access_token",
+    "method": "POST",
+    "url": "https://auth.servicetitan.io/connect/token",
+    "headers": {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    "body": {
+      "grant_type": "client_credentials",
+      "client_id": "{{SERVICETITAN_CLIENT_ID}}",
+      "client_secret": "{{SERVICETITAN_CLIENT_SECRET}}"
+    },
+    "response_example": {
+      "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "token_type": "Bearer",
+      "expires_in": 3600
+    }
+  },
+
+  "endpoints": {
+    "create_estimate": {
+      "description": "Create a new estimate on an existing job",
+      "method": "POST",
+      "url": "https://api.servicetitan.io/sales/v2/tenant/{{TENANT_ID}}/estimates",
+      "headers": {
+        "Authorization": "Bearer {{ACCESS_TOKEN}}",
+        "Content-Type": "application/json",
+        "ST-App-Key": "{{SERVICETITAN_APP_KEY}}"
+      }
+    },
+    "get_job": {
+      "description": "Retrieve job details to confirm job exists before pushing estimate",
+      "method": "GET",
+      "url": "https://api.servicetitan.io/jpm/v2/tenant/{{TENANT_ID}}/jobs/{{JOB_ID}}",
+      "headers": {
+        "Authorization": "Bearer {{ACCESS_TOKEN}}",
+        "ST-App-Key": "{{SERVICETITAN_APP_KEY}}"
+      }
+    },
+    "get_pricebook_items": {
+      "description": "Fetch pricebook SKU IDs from ServiceTitan to map local part codes",
+      "method": "GET",
+      "url": "https://api.servicetitan.io/pricebook/v2/tenant/{{TENANT_ID}}/materials?page=1&pageSize=50",
+      "headers": {
+        "Authorization": "Bearer {{ACCESS_TOKEN}}",
+        "ST-App-Key": "{{SERVICETITAN_APP_KEY}}"
+      }
+    }
+  },
+
+  "estimate_payloads": {
+
+    "single_spring_replacement": {
+      "description": "3-tier estimate for single torsion spring replacement",
+      "scenario": "1 spring system, standard residential door",
+      "method": "POST",
+      "url": "https://api.servicetitan.io/sales/v2/tenant/{{TENANT_ID}}/estimates",
+      "headers": {
+        "Authorization": "Bearer {{ACCESS_TOKEN}}",
+        "Content-Type": "application/json",
+        "ST-App-Key": "{{SERVICETITAN_APP_KEY}}"
+      },
+      "body": {
+        "jobId": "{{JOB_ID}}",
+        "name": "Torsion Spring Replacement - 3 Options",
+        "summary": "Single torsion spring replacement. Calculated IPPT: {{TOTAL_TARGET_IPPT}}. Matched spring: {{MATCHED_PART_CODE}}.",
+        "options": [
+          {
+            "name": "Good",
+            "description": "Standard replacement spring - same spec as original",
+            "items": [
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING}}",
+                "description": "{{SPRING_DESCRIPTION}} (Standard)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_GOOD}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_LABOR_SINGLE}}",
+                "description": "Single Torsion Spring Replacement - Labor",
+                "quantity": 1,
+                "unitPrice": 95.00,
+                "type": "Service"
+              }
+            ],
+            "totalAmount": "{{TOTAL_GOOD}}"
+          },
+          {
+            "name": "Better",
+            "description": "Upgraded spring with extended cycle life (25,000 cycles)",
+            "items": [
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_UPGRADED}}",
+                "description": "{{SPRING_DESCRIPTION}} (25K Cycle Upgrade)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_BETTER}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_LABOR_SINGLE}}",
+                "description": "Single Torsion Spring Replacement - Labor",
+                "quantity": 1,
+                "unitPrice": 95.00,
+                "type": "Service"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_CABLE}}",
+                "description": "Safety Cable Inspection & Replacement",
+                "quantity": 2,
+                "unitPrice": 32.50,
+                "type": "Material"
+              }
+            ],
+            "totalAmount": "{{TOTAL_BETTER}}"
+          },
+          {
+            "name": "Best",
+            "description": "Premium spring system with lifetime warranty + full tune-up",
+            "items": [
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_PREMIUM}}",
+                "description": "{{SPRING_DESCRIPTION}} (Premium Lifetime)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_BEST}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_LABOR_SINGLE}}",
+                "description": "Single Torsion Spring Replacement - Labor",
+                "quantity": 1,
+                "unitPrice": 95.00,
+                "type": "Service"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_CABLE}}",
+                "description": "Safety Cable Replacement (both sides)",
+                "quantity": 2,
+                "unitPrice": 32.50,
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_TUNEUP}}",
+                "description": "Full Door Tune-Up & Lubrication Service",
+                "quantity": 1,
+                "unitPrice": 89.00,
+                "type": "Service"
+              }
+            ],
+            "totalAmount": "{{TOTAL_BEST}}"
+          }
+        ]
+      }
+    },
+
+    "double_spring_replacement": {
+      "description": "3-tier estimate for double torsion spring replacement (R+L wind pair)",
+      "scenario": "2 spring system, standard residential door",
+      "method": "POST",
+      "url": "https://api.servicetitan.io/sales/v2/tenant/{{TENANT_ID}}/estimates",
+      "headers": {
+        "Authorization": "Bearer {{ACCESS_TOKEN}}",
+        "Content-Type": "application/json",
+        "ST-App-Key": "{{SERVICETITAN_APP_KEY}}"
+      },
+      "body": {
+        "jobId": "{{JOB_ID}}",
+        "name": "Double Torsion Spring Replacement - 3 Options",
+        "summary": "Two-spring system replacement. Total Target IPPT: {{TOTAL_TARGET_IPPT}}. Per-spring IPPT: {{SINGLE_SPRING_IPPT}}. Matched pair: {{MATCHED_PART_CODE_R}} + {{MATCHED_PART_CODE_L}}.",
+        "options": [
+          {
+            "name": "Good",
+            "description": "Standard replacement spring pair - same spec as original",
+            "items": [
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_R}}",
+                "description": "{{SPRING_DESCRIPTION}} - Right Wind",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_GOOD}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_L}}",
+                "description": "{{SPRING_DESCRIPTION}} - Left Wind",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_GOOD}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_LABOR_DOUBLE}}",
+                "description": "Double Torsion Spring Replacement - Labor",
+                "quantity": 1,
+                "unitPrice": 115.00,
+                "type": "Service"
+              }
+            ],
+            "totalAmount": "{{TOTAL_GOOD}}"
+          },
+          {
+            "name": "Better",
+            "description": "Upgraded spring pair with extended cycle life + cable replacement",
+            "items": [
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_R_UPGRADED}}",
+                "description": "{{SPRING_DESCRIPTION}} - Right Wind (25K Cycle)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_BETTER}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_L_UPGRADED}}",
+                "description": "{{SPRING_DESCRIPTION}} - Left Wind (25K Cycle)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_BETTER}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_LABOR_DOUBLE}}",
+                "description": "Double Torsion Spring Replacement - Labor",
+                "quantity": 1,
+                "unitPrice": 115.00,
+                "type": "Service"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_CABLE}}",
+                "description": "Safety Cable Replacement (both sides)",
+                "quantity": 2,
+                "unitPrice": 32.50,
+                "type": "Material"
+              }
+            ],
+            "totalAmount": "{{TOTAL_BETTER}}"
+          },
+          {
+            "name": "Best",
+            "description": "Premium spring pair with lifetime warranty + full tune-up",
+            "items": [
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_R_PREMIUM}}",
+                "description": "{{SPRING_DESCRIPTION}} - Right Wind (Premium Lifetime)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_BEST}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_SPRING_L_PREMIUM}}",
+                "description": "{{SPRING_DESCRIPTION}} - Left Wind (Premium Lifetime)",
+                "quantity": 1,
+                "unitPrice": "{{SPRING_PRICE_BEST}}",
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_LABOR_DOUBLE}}",
+                "description": "Double Torsion Spring Replacement - Labor",
+                "quantity": 1,
+                "unitPrice": 115.00,
+                "type": "Service"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_CABLE}}",
+                "description": "Safety Cable Replacement (both sides)",
+                "quantity": 2,
+                "unitPrice": 32.50,
+                "type": "Material"
+              },
+              {
+                "skuId": "{{ST_PRICEBOOK_SKU_ID_TUNEUP}}",
+                "description": "Full Door Tune-Up & Lubrication Service",
+                "quantity": 1,
+                "unitPrice": 89.00,
+                "type": "Service"
+              }
+            ],
+            "totalAmount": "{{TOTAL_BEST}}"
+          }
+        ]
+      }
+    }
+  },
+
+  "runtime_variable_map": {
+    "description": "Maps engine.py output fields to ServiceTitan payload placeholders",
+    "mappings": {
+      "{{JOB_ID}}": "Provided by dispatcher / ServiceTitan job lookup",
+      "{{TENANT_ID}}": "os.getenv('SERVICETITAN_TENANT_ID')",
+      "{{ACCESS_TOKEN}}": "Fetched via OAuth2 token endpoint at runtime",
+      "{{SERVICETITAN_APP_KEY}}": "os.getenv('SERVICETITAN_APP_KEY')",
+      "{{TOTAL_TARGET_IPPT}}": "result['calculation'].total_target_ippt",
+      "{{SINGLE_SPRING_IPPT}}": "result['calculation'].single_spring_target_ippt",
+      "{{MATCHED_PART_CODE}}": "result['matches'].matches[0].part_code",
+      "{{MATCHED_PART_CODE_R}}": "result['matches'].paired_sets[0]['right_spring'].part_code",
+      "{{MATCHED_PART_CODE_L}}": "result['matches'].paired_sets[0]['left_spring'].part_code",
+      "{{SPRING_DESCRIPTION}}": "result['matches'].matches[0].description",
+      "{{SPRING_PRICE_GOOD}}": "result['matches'].matches[0].pricing['good']",
+      "{{SPRING_PRICE_BETTER}}": "result['matches'].matches[0].pricing['better']",
+      "{{SPRING_PRICE_BEST}}": "result['matches'].matches[0].pricing['best']",
+      "{{TOTAL_GOOD}}": "spring_price_good + labor_price",
+      "{{TOTAL_BETTER}}": "spring_price_better + labor_price + cable_price",
+      "{{TOTAL_BEST}}": "spring_price_best + labor_price + cable_price + tuneup_price"
+    }
+  }
+}
