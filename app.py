@@ -1,0 +1,364 @@
+"""
+Garage Door Spring Calculator
+================================
+Streamlit app — single and dual spring modes.
+Run with: streamlit run app.py
+"""
+
+import streamlit as st
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from engine import calculate_target_ippt, DRUM_PROFILES, DEFAULT_TOLERANCE
+
+st.set_page_config(
+    page_title="Spring Calc",
+    page_icon="💵",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+DRUM_OPTIONS = {
+    "d400_96":  "Canimex / TF D-400-96",
+    "d400_144": "Canimex D-400-144",
+}
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+.stApp { background-color: #f4f6f9; color: #1a1a2e; }
+#MainMenu, footer, header { visibility: hidden; }
+div[data-testid="stMarkdown"] { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+.block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 680px; }
+
+.app-header { text-align: center; padding: 1.5rem 0 1.25rem 0; }
+.app-logo { font-size: 2rem; margin-bottom: 0.3rem; }
+.app-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; color: #1a1a2e; margin: 0; }
+.app-verse { font-size: 0.72rem; color: #9ca3af; margin-top: 0.5rem; font-style: italic; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+
+div[data-testid="stNumberInput"] label,
+div[data-testid="stRadio"] label,
+div[data-testid="stSelectbox"] label { color: #6b7280 !important; font-size: 0.68rem !important; font-weight: 700 !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; }
+div[data-testid="stNumberInput"] input { background: #f9fafb !important; border: 1px solid #e5e7eb !important; border-radius: 8px !important; color: #111827 !important; font-size: 1.15rem !important; font-weight: 700 !important; }
+div[data-testid="stSelectbox"] > div > div { background: #f9fafb !important; border: 1px solid #e5e7eb !important; border-radius: 8px !important; color: #111827 !important; font-size: 0.88rem !important; font-weight: 600 !important; }
+div[data-testid="stRadio"] > div { flex-direction: row !important; gap: 0.5rem !important; }
+div[data-testid="stRadio"] > div > label { background: #f9fafb !important; border: 1px solid #e5e7eb !important; border-radius: 8px !important; padding: 0.55rem 1.4rem !important; color: #111827 !important; font-size: 0.95rem !important; font-weight: 700 !important; text-transform: none !important; letter-spacing: 0 !important; cursor: pointer; }
+div[data-testid="stRadio"] > div > label p, div[data-testid="stRadio"] > div > label span { color: #111827 !important; font-weight: 700 !important; }
+div[data-testid="stCheckbox"] label, div[data-testid="stCheckbox"] label p { color: #374151 !important; font-size: 0.82rem !important; font-weight: 600 !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+.stButton > button { width: 100%; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; font-weight: 700; font-size: 0.88rem; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 10px; padding: 0.9rem; margin-top: 0.25rem; box-shadow: 0 2px 8px rgba(220,38,38,0.3); }
+.stButton > button:hover { opacity: 0.9; }
+
+.ippt-banner { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.75rem; text-align: center; margin: 1.25rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+.ippt-banner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #dc2626, #ef4444, #dc2626); }
+.ippt-value { font-size: 4.5rem; font-weight: 900; color: #111827; line-height: 1; letter-spacing: -0.04em; }
+.ippt-unit { font-size: 1rem; font-weight: 600; color: #dc2626; margin-left: 0.2rem; }
+.ippt-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #9ca3af; margin-top: 0.5rem; }
+.ippt-window { font-size: 0.78rem; color: #9ca3af; margin-top: 0.5rem; }
+.ippt-window b { color: #6b7280; }
+.ippt-mode { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.6rem; padding: 0.25rem 0.75rem; border-radius: 20px; display: inline-block; }
+.ippt-mode-single { background: #fef3c7; color: #d97706; }
+.ippt-mode-dual   { background: #eff6ff; color: #2563eb; }
+
+.metrics-row { display: flex; gap: 0.6rem; margin: 0.75rem 0 1.25rem 0; }
+.metric-pill { flex: 1; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 0.65rem 0.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.metric-pill-val { font-size: 1.0rem; font-weight: 700; color: #111827; }
+.metric-pill-lbl { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #9ca3af; margin-top: 0.15rem; }
+
+.section-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.5rem 0 1rem 0; }
+.sdl { flex: 1; height: 1px; background: #e5e7eb; }
+.sdt { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #d1d5db; white-space: nowrap; }
+
+.tier-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 1.1rem 1.25rem; margin: 0.55rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.tier-card-standard { border-left: 4px solid #9ca3af; }
+.tier-card-high     { border-left: 4px solid #3b82f6; }
+.tier-card-maxlife  { border-left: 4px solid #f59e0b; }
+.tier-card-upgrade  { border-left: 4px solid #10b981; background: #f0fdf4; border-color: #bbf7d0; }
+
+.tier-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.55rem; }
+.tier-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 20px; }
+.tb-standard { background: #f3f4f6; color: #6b7280; }
+.tb-high     { background: #eff6ff; color: #2563eb; }
+.tb-maxlife  { background: #fffbeb; color: #d97706; }
+.tb-upgrade  { background: #d1fae5; color: #059669; }
+
+.tier-delta { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; background: #f9fafb; border: 1px solid #e5e7eb; }
+.td-pos  { color: #059669; }
+.td-neg  { color: #dc2626; }
+.td-zero { color: #059669; }
+
+.tier-codes { font-size: 1.45rem; font-weight: 800; color: #111827; letter-spacing: -0.01em; }
+.tier-plus  { color: #d1d5db; font-weight: 300; margin: 0 0.3rem; }
+.tier-bottom-row { display: flex; align-items: center; margin-top: 0.4rem; gap: 0.5rem; }
+.tier-ippt { font-size: 0.85rem; font-weight: 600; color: #059669; }
+.tier-sep  { color: #e5e7eb; font-size: 0.7rem; }
+.tier-cat  { font-size: 0.65rem; color: #9ca3af; }
+
+.upgrade-header { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+
+.oor-card { background: #fafafa; border: 1px dashed #e5e7eb; border-radius: 14px; padding: 0.9rem 1.25rem; margin: 0.55rem 0; display: flex; align-items: center; gap: 0.85rem; }
+.oor-icon { font-size: 1.2rem; opacity: 0.3; }
+.oor-tier { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #d1d5db; margin-bottom: 0.15rem; }
+.oor-msg  { font-size: 0.85rem; font-weight: 600; color: #9ca3af; }
+
+.note-box { background: #f9fafb; border-left: 2px solid #e5e7eb; padding: 0.45rem 0.75rem; border-radius: 4px; font-size: 0.72rem; color: #6b7280; margin: 0.25rem 0; font-family: 'Courier New', monospace; }
+
+.match-row { display: flex; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f3f4f6; gap: 0.75rem; }
+.match-row:last-child { border-bottom: none; }
+.mr-rank  { font-size: 0.62rem; color: #d1d5db; font-weight: 700; min-width: 1.5rem; }
+.mr-codes { font-size: 0.9rem; font-weight: 700; color: #111827; flex: 1; }
+.mr-cat   { font-size: 0.62rem; color: #9ca3af; display: block; margin-top: 0.1rem; }
+.mr-ippt  { font-size: 0.82rem; font-weight: 600; color: #059669; white-space: nowrap; }
+.mr-delta { font-size: 0.62rem; color: #9ca3af; }
+
+.empty-state { text-align: center; padding: 4rem 1rem 3rem 1rem; }
+.empty-icon  { font-size: 3rem; margin-bottom: 0.75rem; opacity: 0.2; }
+.empty-text  { font-size: 0.85rem; color: #9ca3af; font-weight: 500; }
+
+.app-footer { text-align: center; padding: 2rem 0 0.5rem 0; font-size: 0.62rem; color: #d1d5db; letter-spacing: 0.08em; text-transform: uppercase; }
+
+details { background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 10px !important; padding: 0 0.5rem !important; box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important; }
+details summary { font-size: 0.7rem !important; color: #9ca3af !important; font-weight: 700 !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; padding: 0.75rem 0 !important; }
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
+# Header
+# ---------------------------------------------------------------------------
+st.markdown("""
+<div class="app-header">
+  <div class="app-logo">💵</div>
+  <div class="app-title">Spring Calculator</div>
+  <div class="app-verse">&ldquo;A false balance is an abomination to the Lord, but a just weight is his delight.&rdquo; &mdash; Proverbs 11:1</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
+# Inputs
+# ---------------------------------------------------------------------------
+col1, col2 = st.columns(2)
+with col1:
+    door_weight = st.number_input("Weight (lbs)", min_value=50, max_value=700, value=185, step=5)
+with col2:
+    door_height = st.number_input("Height (ft)", min_value=6.0, max_value=16.0, value=7.0, step=0.5)
+
+col3, col4 = st.columns(2)
+with col3:
+    track_radius = st.radio("Track Radius", options=[12, 15], index=0, format_func=lambda x: f'{x}"')
+with col4:
+    drum_model = st.selectbox("Drum Model", options=list(DRUM_OPTIONS.keys()), index=0, format_func=lambda k: DRUM_OPTIONS[k])
+
+# Single / Dual toggle
+spring_mode = st.radio(
+    "Spring Configuration",
+    options=["Dual Spring", "Single Spring"],
+    index=0,
+    horizontal=True,
+)
+single_spring = (spring_mode == "Single Spring")
+
+calc_btn = st.button("⚡ Calculate Spring Requirements")
+
+# ---------------------------------------------------------------------------
+# Helper: render one tier result card
+# ---------------------------------------------------------------------------
+TIER_CFG = {
+    "standard": ("tb-standard", "tier-card-standard", "Standard Cycle"),
+    "high":     ("tb-high",     "tier-card-high",     "High Cycle"),
+    "max_life": ("tb-maxlife",  "tier-card-maxlife",  "Max Life"),
+}
+
+def render_tier(tr, is_upgrade=False):
+    badge_cls, card_cls, tier_name = TIER_CFG.get(tr.tier_key, ("", "", tr.tier_key))
+    if is_upgrade:
+        badge_cls = "tb-upgrade"
+        card_cls  = "tier-card tier-card-upgrade"
+    else:
+        card_cls = f"tier-card {card_cls}"
+
+    if tr.in_range:
+        m = tr.match
+        if m.delta > 0:
+            delta_str, delta_cls = f"+{m.delta}", "td-pos"
+        elif m.delta < 0:
+            delta_str, delta_cls = str(m.delta), "td-neg"
+        else:
+            delta_str, delta_cls = "±0", "td-zero"
+
+        if m.is_single:
+            codes_html = m.spring1_code
+            pair_label = "Single spring"
+        else:
+            codes_html = f'{m.spring1_code}<span class="tier-plus">+</span>{m.spring2_code}'
+            pair_label = "Matched pair" if m.spring1_code == m.spring2_code else "Mixed pair"
+
+        st.markdown(f"""
+        <div class="{card_cls}">
+          <div class="tier-top-row">
+            <span class="tier-badge {badge_cls}">{tier_name}</span>
+            <span class="tier-delta {delta_cls}">{delta_str} IPPT</span>
+          </div>
+          <div class="tier-codes">{codes_html}</div>
+          <div class="tier-bottom-row">
+            <span class="tier-ippt">{m.ippt} IPPT</span>
+            <span class="tier-sep">·</span>
+            <span class="tier-cat">{m.tier_label} · {pair_label}</span>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div class="oor-card">
+          <div class="oor-icon">⊘</div>
+          <div>
+            <div class="oor-tier">{tier_name}</div>
+            <div class="oor-msg">Out of Range — Does Not Qualify</div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
+# Results
+# ---------------------------------------------------------------------------
+if calc_btn:
+    try:
+        result = calculate_target_ippt(
+            door_weight_lbs=float(door_weight),
+            door_height_ft=float(door_height),
+            track_radius=int(track_radius),
+            drum_model=drum_model,
+            single_spring=single_spring,
+        )
+
+        mode_label    = "Single Spring" if single_spring else "Dual Spring"
+        mode_cls      = "ippt-mode-single" if single_spring else "ippt-mode-dual"
+        ippt_sublabel = "Target Single IPPT" if single_spring else "Target Combined IPPT"
+
+        # ── IPPT Banner ──
+        st.markdown(f"""
+        <div class="ippt-banner">
+          <div class="ippt-value">{result.target_ippt}<span class="ippt-unit">IPPT</span></div>
+          <div class="ippt-label">{ippt_sublabel}</div>
+          <div class="ippt-window">
+            Match window &nbsp;<b>{result.lower_bound} – {result.upper_bound}</b>&nbsp; (±{result.tolerance})
+          </div>
+          <div><span class="ippt-mode {mode_cls}">{mode_label}</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ── Metrics ──
+        st.markdown(f"""
+        <div class="metrics-row">
+          <div class="metric-pill">
+            <div class="metric-pill-val">{result.door_weight_lbs} lbs</div>
+            <div class="metric-pill-lbl">Weight</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-val">{result.door_height_ft} ft</div>
+            <div class="metric-pill-lbl">Height</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-val">{result.track_radius}"</div>
+            <div class="metric-pill-lbl">Radius</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-val">{result.cable_drum_turns}</div>
+            <div class="metric-pill-lbl">CDT</div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ── Calculation Notes ──
+        with st.expander("Calculation details"):
+            for note in result.notes:
+                st.markdown(f'<div class="note-box">▸ {note}</div>', unsafe_allow_html=True)
+
+        # ── Primary Results ──
+        section_title = "Single Spring Options by Grade" if single_spring else "Spring Pairs by Grade"
+        st.markdown(f"""
+        <div class="section-divider">
+          <div class="sdl"></div>
+          <div class="sdt">{section_title}</div>
+          <div class="sdl"></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        for tr in result.tier_results:
+            render_tier(tr, is_upgrade=False)
+
+        # ── Dual Upgrade Section (single spring mode only) ──
+        if single_spring:
+            has_upgrade = any(tr.in_range for tr in result.dual_upgrade_tier_results)
+            st.markdown("""
+            <div class="section-divider">
+              <div class="sdl"></div>
+              <div class="sdt">Dual Spring Upgrade</div>
+              <div class="sdl"></div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            if has_upgrade:
+                st.markdown("""
+                <div class="upgrade-header">
+                  ✅ Qualifies for dual spring upgrade — safer & longer lasting
+                </div>
+                """, unsafe_allow_html=True)
+                for tr in result.dual_upgrade_tier_results:
+                    render_tier(tr, is_upgrade=True)
+            else:
+                st.markdown("""
+                <div class="oor-card">
+                  <div class="oor-icon">⊘</div>
+                  <div>
+                    <div class="oor-msg">Does not qualify for dual spring upgrade at this weight/height</div>
+                  </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # ── All Matches Expander ──
+        if result.all_matches:
+            label = "single spring" if single_spring else "pair"
+            with st.expander(f"All {len(result.all_matches)} matching {label}(s)"):
+                for m in result.all_matches:
+                    delta_sign = f"+{m.delta}" if m.delta >= 0 else str(m.delta)
+                    codes = m.spring1_code if m.is_single else f"{m.spring1_code} + {m.spring2_code}"
+                    st.markdown(f"""
+                    <div class="match-row">
+                      <span class="mr-rank">#{m.rank}</span>
+                      <span class="mr-codes">
+                        {codes}
+                        <span class="mr-cat">{m.tier_label}</span>
+                      </span>
+                      <span class="mr-ippt">{m.ippt}
+                        <span class="mr-delta">({delta_sign})</span>
+                      </span>
+                    </div>
+                    """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="oor-card">
+              <div class="oor-icon">⊘</div>
+              <div>
+                <div class="oor-msg">No matches found within ±{result.tolerance} IPPT of {result.target_ippt}</div>
+              </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    except Exception as e:
+        st.error(f"Calculation error: {e}")
+        st.exception(e)
+
+else:
+    st.markdown("""
+    <div class="empty-state">
+      <div class="empty-icon">💵</div>
+      <div class="empty-text">Enter door specs above and tap Calculate</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown(
+    '<div class="app-footer">Spring Calc v2.3 &nbsp;·&nbsp; SSC Formula Verified &nbsp;·&nbsp; Single & Dual Spring</div>',
+    unsafe_allow_html=True
+)
